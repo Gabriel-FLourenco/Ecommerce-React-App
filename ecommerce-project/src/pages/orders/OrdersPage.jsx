@@ -5,14 +5,14 @@ import { useState, useEffect, Fragment } from 'react';
 import { OrderDetailsGrid } from './OrderDetailsGrid';
 import { OrderHeader } from './OrderHeader';
 
-export function OrdersPage({ cart }) {
+export function OrdersPage({ cart, loadCart }) {
     const [orders, setOrders] = useState([]);
 
-    
+
     useEffect(() => {
-        const fetchOrdersData = async () =>{
+        const fetchOrdersData = async () => {
             const response = await axios.get('/api/orders?expand=products')
-                setOrders(response.data);
+            setOrders(response.data);
         };
         fetchOrdersData();
     }, []);
@@ -31,9 +31,9 @@ export function OrdersPage({ cart }) {
                         return (
                             <div key={order.id} className="order-container">
 
-                                <OrderHeader order={order}/>
+                                <OrderHeader order={order} />
 
-                                <OrderDetailsGrid order={order}/>
+                                <OrderDetailsGrid order={order} loadCart={loadCart} />
                             </div>
                         );
                     })}

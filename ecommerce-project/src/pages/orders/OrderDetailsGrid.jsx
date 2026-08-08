@@ -1,7 +1,16 @@
 import { Fragment } from "react";
+import axios from 'axios';
 import dayjs from "dayjs";
 
-export function OrderDetailsGrid({ order }) {
+export function OrderDetailsGrid({ order, loadCart }) {
+    const addToCartOrders = async (product) => {
+        await axios.post('/api/cart-items', {
+            productId: product.id,
+            quantity: 1
+        });
+        await loadCart();
+    };
+
     return (
         <div className="order-details-grid">
             {order.products.map((orderProduct) => {
@@ -19,9 +28,12 @@ export function OrderDetailsGrid({ order }) {
                                 Arriving on: {dayjs(orderProduct.estimatedDeliveryTimeMs).format('MMMM D')}
                             </div>
                             <div className="product-quantity">
-                                {orderProduct.quantity}
+                                Quantity: {orderProduct.quantity}
                             </div>
-                            <button className="buy-again-button button-primary">
+                            <button
+                                className="buy-again-button button-primary"
+                                onClick={() => addToCartOrders(orderProduct.product)}
+                            >
                                 <img className="buy-again-icon" src="images/icons/buy-again.png" />
                                 <span className="buy-again-message">Add to Cart</span>
                             </button>
